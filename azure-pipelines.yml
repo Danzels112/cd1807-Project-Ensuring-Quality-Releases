@@ -18,3 +18,12 @@ variables:
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
   environmentName: 'my-env'
+
+stages:
+  - stage: Pipeline Test
+    jobs:
+      - job: Randomtest
+        steps:
+        - task: CmdLine@2
+          inputs:
+            script: 'echo Hello world'
