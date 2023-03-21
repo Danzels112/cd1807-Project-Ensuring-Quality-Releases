@@ -27,3 +27,31 @@ stages:
         - task: CmdLine@2
           inputs:
             script: 'echo Hello world'
+  
+  - stage: Build
+    jobs:
+      - job: BuildInfrastructure
+        steps:
+          - task: TerraformInstaller@1
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Initialize Terraform - terraform init'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              backendServiceArm: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+              backendAzureRmResourceGroupName: 'Azuredevops'
+              backendAzureRmStorageAccountName: 'tfstate2377230974'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'test.terraform.tfstate'
+              
+          - task: TerraformTaskV4@4
+            displayName: 'Validate code - terraform validate'
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
