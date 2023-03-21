@@ -20,7 +20,7 @@ variables:
   environmentName: 'my-env'
 
 stages:
-  - stage: Pipeline Test
+  - stage: PipelineTest
     jobs:
       - job: Randomtest
         steps:
