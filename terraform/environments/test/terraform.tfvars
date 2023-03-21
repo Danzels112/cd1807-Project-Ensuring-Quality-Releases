@@ -1,7 +1,7 @@
 # Azure subscription vars
 subscription_id = "601c9c7b-8f40-476f-92b1-3b437e0aef1d"
-client_id = "14455a46-6089-4c3f-9310-7e89bf78d9ee"
-client_secret = "" # THIS SHOULDN'T BE HARDCODED. Using ENV variable instead
+client_id = "61f85a96-db05-4e55-b99d-4af96b482ce0"
+client_secret = "rDT8Q~1glEoiyfE4RZDKARPYwoAxY8pnlRPvNcvG" # THIS SHOULDN'T BE HARDCODED. Using ENV variable instead
 tenant_id = "14ab4b19-a31c-4bd1-90af-caa984fe1312"
 
 # Resource Group/Location
