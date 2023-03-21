@@ -14,3 +14,7 @@ variable virtual_network_name {}
 variable address_prefix_test {}
 variable address_space {}
 
+# VM specific
+
+variable vm_name{}
+
