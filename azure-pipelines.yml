@@ -56,17 +56,31 @@ stages:
               command: 'validate'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-          - task: TerraformTaskV4@4
-            displayName: 'Plan output - terraform plan'
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-              environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+          # - task: TerraformTaskV4@4
+          #   displayName: 'Plan output - terraform plan'
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'plan'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          #     environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
               
-          - task: TerraformTaskV4@4
-            displayName: 'Apply configuration - terraform apply'
+          # - task: TerraformTaskV4@4
+          #   displayName: 'Apply configuration - terraform apply'
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'apply'
+          #     environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+
+  - stage: ToolsProvisioning
+    jobs:
+      - job: TestingToolSetup
+        steps:
+          - task: CmdLine@2
+            displayName: 'Install node'
             inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+              script: 'sudo apt install nodejs'
+              
+          - task: CmdLine@2
+            displayName: 'Ensure node is installed'
+            inputs:
+              script: 'nodejs --version'
