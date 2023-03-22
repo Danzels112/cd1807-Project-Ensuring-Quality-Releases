@@ -84,3 +84,13 @@ stages:
             displayName: 'Ensure node is installed'
             inputs:
               script: 'nodejs --version'
+
+          - task: CmdLine@2
+            displayName: 'Install newman'
+            inputs:
+              script: 'npm install -g newman'
+              
+          - task: CmdLine@2
+            displayName: 'Ensure newman is installed'
+            inputs:
+              script: 'newman -v'
