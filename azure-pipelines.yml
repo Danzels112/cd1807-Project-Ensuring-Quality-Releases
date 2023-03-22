@@ -63,3 +63,10 @@ stages:
               command: 'plan'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+              
+          - task: TerraformTaskV4@4
+            displayName: 'Apply configuration - terraform apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
