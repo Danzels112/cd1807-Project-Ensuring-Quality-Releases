@@ -89,6 +89,8 @@ stages:
             displayName: 'Install newman'
             inputs:
               script: 'npm install -g newman'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              
               
           - task: CmdLine@2
             displayName: 'Ensure newman is installed'
@@ -100,4 +102,4 @@ stages:
             continueOnError: true
             inputs:
               script: 'newman run regression_Postman.postman_collection.json -e Regression_env.postman_environment.json --reporters cli,junit --reporter-junit-export TestPostMan\PostmanRegression.xml'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
