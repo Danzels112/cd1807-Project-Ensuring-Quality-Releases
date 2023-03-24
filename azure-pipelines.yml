@@ -109,4 +109,4 @@ stages:
             continueOnError: true
             inputs:
               script: 'ls -la'
-              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting'
