@@ -94,3 +94,10 @@ stages:
             displayName: 'Ensure newman is installed'
             inputs:
               script: 'newman -v'
+
+          - task: CmdLine@2
+            displayName: 'Run Regression tests'
+            continueOnError: true
+            inputs:
+              script: 'newman run regression_Postman.postman_collection.json -e Regression_env.postman_environment.json --reporters cli,junit --reporter-junit-export TestPostMan\PostmanRegression.xml'
+              workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/postman
