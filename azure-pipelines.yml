@@ -121,7 +121,7 @@ stages:
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: 'JUnit'
-              testResultsFiles: '**/TEST-*.xml'
-              searchFolder: '$(System.DefaultWorkingDirectory)/TestPostMan/*.xml'
+              testResultsFiles: '*.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)/TestPostMan'
               mergeTestResults: true
               testRunTitle: 'Postman Tests'
