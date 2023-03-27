@@ -101,14 +101,14 @@ stages:
             displayName: 'Run Regression tests'
             continueOnError: true
             inputs:
-              script: 'newman run regression_Postman.postman_collection.json -e Regression_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan\PostmanRegression.xml'
+              script: 'newman run regression_Postman.postman_collection.json -e Regression_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan/PostmanRegression.xml'
               workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
               
           - task: CmdLine@2
             displayName: 'Run Data validation tests'
             continueOnError: true
             inputs:
-              script: 'newman run Data_Validation.postman_collection.json -e Validation_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan\PostmanRegression.xml'
+              script: 'newman run Data_Validation.postman_collection.json -e Validation_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan/PostmanRegression.xml'
               workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
 
           - task: CmdLine@2
@@ -117,3 +117,11 @@ stages:
             inputs:
               script: 'ls -la'
               workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/TEST-*.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)/TestPostMan/*.xml'
+              mergeTestResults: true
+              testRunTitle: 'Postman Tests'
