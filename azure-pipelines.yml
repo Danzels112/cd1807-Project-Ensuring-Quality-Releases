@@ -103,6 +103,13 @@ stages:
             inputs:
               script: 'newman run regression_Postman.postman_collection.json -e Regression_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan\PostmanRegression.xml'
               workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+              
+          - task: CmdLine@2
+            displayName: 'Run Data validation tests'
+            continueOnError: true
+            inputs:
+              script: 'newman run Data_Validation.postman_collection.json -e Validation_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan\PostmanRegression.xml'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
 
           - task: CmdLine@2
             displayName: 'ls -la'
