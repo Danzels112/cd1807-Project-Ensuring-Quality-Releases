@@ -159,7 +159,7 @@ stages:
             steps:
             - task: AzureWebApp@1
               inputs:
-                azureSubscription: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+                azureSubscription: 'devops-sc'
                 appType: 'webAppLinux'
                 appName: 'myApplication-danszz-AppService'
                 deployToSlotOrASE: true
