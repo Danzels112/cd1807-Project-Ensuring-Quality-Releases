@@ -144,7 +144,7 @@ stages:
     jobs:
     - deployment: fakerapi
       pool:
-        vmImage: 'ubuntu-22.04'
+        vmImage: 'ubuntu-20.04'
       environment: 'my-env'
       strategy:
         runOnce:
