@@ -21,7 +21,7 @@ module "resource_group" {
 
 module "vm" {
   source = "../../modules/vm"
-  location = "${var.location}"
+  location = "${var.rg_location}"
   resource_group = "${var.resource_group}"
   vm_name = "${var.vm_name}"
   subnet_id = "${module.network.subnet_id_test}"
