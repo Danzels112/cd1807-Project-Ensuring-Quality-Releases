@@ -181,7 +181,7 @@ stages:
             - task: AzureWebApp@1
               displayName: 'Deploy Azure Web App'
               inputs:
-                azureSubscription: 'devops-sc'
+                azureSubscription: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
                 appType: 'webApp'
                 appName: 'myApplication-danszzz-AppService'
                 package: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
