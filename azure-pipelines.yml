@@ -162,7 +162,7 @@ stages:
                 deployToSlotOrASE: true
                 ResourceGroupName: 'Azuredevops'
                 SlotName: 'production'
-                packageForLinux: '$(Pipeline.Workspace)/$(Build.BuildId)-fakerapi.zip'
+                packageForLinux: '$(Pipeline.Workspace)/fakerapi/$(Build.BuildId)-fakerapi.zip'
                 
 
 
