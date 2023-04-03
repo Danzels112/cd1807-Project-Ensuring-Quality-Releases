@@ -146,29 +146,45 @@ stages:
               targetPath: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
               artifact: fakerapi
 
-  - stage: AppServiceDeploy
-    displayName: WebApp stand-up
+  # - stage: AppServiceDeploy
+  #   displayName: WebApp stand-up
+  #   jobs:
+  #   - deployment: fakerapi
+  #     pool:
+  #       vmImage: 'ubuntu-20.04'
+  #     environment: 'my-env'
+  #     strategy:
+  #       runOnce:
+  #         deploy:
+  #           steps:
+  #           - task: AzureWebApp@1
+  #             inputs:
+  #               azureSubscription: 'devops-sc'
+  #               appType: 'webAppLinux'
+  #               appName: 'myApplication-danszzz-AppService'
+  #               deployToSlotOrASE: true
+  #               resourceGroupName: 'Azuredevops'
+  #               slotName: 'production'
+  #               package: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
+                
+  - stage: WebAppDeployment
+    displayName: Web App Deployment
     jobs:
-    - deployment: fakerapi
+    - deployment: FakeRestAPI
       pool:
-        vmImage: 'ubuntu-20.04'
+        vmImage: 'Ubuntu-20.04'
       environment: 'my-env'
       strategy:
         runOnce:
           deploy:
             steps:
             - task: AzureWebApp@1
+              displayName: 'Deploy Azure Web App'
               inputs:
-                azureSubscription: 'devops-sc'
-                appType: 'webAppLinux'
+                azureSubscription: 'EnsuringQualityReleasesSC'
+                appType: 'webApp'
                 appName: 'myApplication-danszzz-AppService'
-                deployToSlotOrASE: true
-                resourceGroupName: 'Azuredevops'
-                slotName: 'production'
                 package: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
-                
-
-
-
+                deploymentMethod: 'auto'
 
 
