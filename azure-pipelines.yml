@@ -43,7 +43,7 @@ stages:
               provider: 'azurerm'
               command: 'init'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-              backendServiceArm:  '$(azureServiceConnectionId)'
+              backendServiceArm:  '$(eq-march-sc)'
               backendAzureRmResourceGroupName: 'Azuredevops'
               backendAzureRmStorageAccountName: 'tfstate2377230974'
               backendAzureRmContainerName: 'tfstate'
