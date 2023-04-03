@@ -43,7 +43,7 @@ stages:
               provider: 'azurerm'
               command: 'init'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-              backendServiceArm:  '$(eq-march-sc)'
+              backendServiceArm:  'eq-march-sc'
               backendAzureRmResourceGroupName: 'Azuredevops'
               backendAzureRmStorageAccountName: 'tfstate2377230974'
               backendAzureRmContainerName: 'tfstate'
@@ -62,7 +62,7 @@ stages:
               provider: 'azurerm'
               command: 'plan'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-              environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+              environmentServiceNameAzureRM: 'eq-march-sc'
               
           # - task: TerraformTaskV4@4
           #   displayName: 'Apply configuration - terraform apply'
