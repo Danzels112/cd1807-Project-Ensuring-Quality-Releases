@@ -64,13 +64,13 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'eq-march-sc'
               
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Apply configuration - terraform apply'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'apply'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+          - task: TerraformTaskV4@4
+            displayName: 'Apply configuration - terraform apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
   # - stage: ToolsProvisioning
   #   jobs:
@@ -188,3 +188,54 @@ stages:
   #               deploymentMethod: 'auto'
 
 
+          - task: ArchiveFiles@2
+            displayName: 'Archive FakeRestAPI'
+            inputs:
+              rootFolderOrFile: 'automatedtesting/jmeter/fakerestapi'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+          - publish: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+            displayName: 'Upload fakerrestapi Package'
+            artifact: fakerapi
+          # - task: ArchiveFiles@2
+          #   displayName: 'Archive Automation Tests'
+          #   inputs:
+          #     rootFolderOrFile: 'automatedtesting' 
+          #     includeRootFolder: false
+          #     archiveType: 'zip'
+          #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-automatedtests.zip' 
+          # - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-automatedtests.zip'
+          #   displayName: 'Upload Test Package'
+          #   artifact: drop-automatedtests
+  - stage:
+    jobs:
+        - deployment: testdeploy
+          displayName: Deploy VM
+          environment:
+            name: 'my-env'
+            resourceType: VirtualMachine
+          pool:
+            vmImage: 'Ubuntu-latest'
+          strategy:
+            runOnce:
+              deploy:
+                 steps:
+                  - task: AzureRmWebAppDeployment@4
+                    inputs:
+                      ConnectionType: 'AzureRM'
+                      azureSubscription: 'appService'
+                      appType: 'webAppLinux'
+                      WebAppName: 'myApplication-danszzzz-AppService'
+                      deployToSlotOrASE: true
+                      ResourceGroupName: 'Azuredevops'
+                      SlotName: 'production'
+                      packageForLinux: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
+
+                  - task: Bash@3
+                    inputs:
+                      targetType: 'inline'
+                      script: |
+                        # Write your commands here
+                
+                        echo 'FakeRestAPI Running'
