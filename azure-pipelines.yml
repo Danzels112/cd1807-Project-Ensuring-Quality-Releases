@@ -126,7 +126,7 @@ stages:
               mergeTestResults: true
               testRunTitle: 'Postman Tests'
 
-  - stage: Archive App & Tests
+  - stage: ArchiveAppAndTests
     jobs:
       - job: Archive
         steps:
