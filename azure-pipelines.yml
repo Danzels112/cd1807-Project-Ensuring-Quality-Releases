@@ -64,13 +64,13 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
               
-          - task: TerraformTaskV4@4
-            displayName: 'Apply configuration - terraform apply'
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-              environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+          # - task: TerraformTaskV4@4
+          #   displayName: 'Apply configuration - terraform apply'
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'apply'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          #     environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
 
   # - stage: ToolsProvisioning
   #   jobs:
@@ -151,11 +151,15 @@ stages:
           deploy:
             steps:
 
-            - task: AzureWebApp@1
+            - task: AzureRmWebAppDeployment@4
               inputs:
+                ConnectionType: 'AzureRM'
                 azureSubscription: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
                 appType: 'webAppLinux'
-                appName: 'myApplication-danszz-AppService'
-                package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
+                WebAppName: 'myApplication-danszz-AppService'
+                deployToSlotOrASE: true
+                ResourceGroupName: 'Azuredevops'
+                SlotName: 'production'
+                packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
 
 
