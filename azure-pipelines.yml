@@ -56,20 +56,20 @@ stages:
               command: 'validate'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Plan output - terraform plan'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'plan'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+          - task: TerraformTaskV4@4
+            displayName: 'Plan output - terraform plan'
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
               
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Apply configuration - terraform apply'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'apply'
-          #     environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+          - task: TerraformTaskV4@4
+            displayName: 'Apply configuration - terraform apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
 
   - stage: ToolsProvisioning
     jobs:
@@ -125,3 +125,17 @@ stages:
               searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/TestPostMan'
               mergeTestResults: true
               testRunTitle: 'Postman Tests'
+
+  - stage: Archive App & Tests
+    jobs:
+      - job: Archive
+        steps:
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+              includeRootFolder: true
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
+              replaceExistingArchive: true
+
+
