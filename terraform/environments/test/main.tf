@@ -16,12 +16,12 @@ terraform {
 module "resource_group" {
   source               = "../../modules/resource_group"
   resource_group       = "${var.resource_group}"
-  location             = "${var.rg_location}"
+  location             = "${var.location}"
 }
 
 module "vm" {
   source = "../../modules/vm"
-  location = "${var.rg_location}"
+  location = "${var.location}"
   resource_group = "${var.resource_group}"
   vm_name = "${var.vm_name}"
   subnet_id = "${module.network.subnet_id_test}"
