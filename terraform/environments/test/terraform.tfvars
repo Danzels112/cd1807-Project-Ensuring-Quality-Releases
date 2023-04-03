@@ -8,7 +8,7 @@ tenant_id = "14ab4b19-a31c-4bd1-90af-caa984fe1312"
 location = "East US"
 rg_location = "East US"
 resource_group = "Azuredevops"
-application_type = "myApplication-danszz"
+application_type = "myApplication-danszzz"
 
 # Network
 virtual_network_name = ""
