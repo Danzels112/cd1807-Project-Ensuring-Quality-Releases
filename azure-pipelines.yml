@@ -139,4 +139,23 @@ stages:
               archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
               replaceExistingArchive: true
 
+  - stage: AppServiceDeploy
+    displayName: WebApp stand-up
+    jobs:
+    - deployment: fakerapi
+      pool:
+        vmImage: 'Ubuntu-18.04'
+      environment: 'my-env'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+
+            - task: AzureWebApp@1
+              inputs:
+                azureSubscription: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+                appType: 'webAppLinux'
+                appName: 'myApplication-danszz-AppService'
+                package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
+
 
