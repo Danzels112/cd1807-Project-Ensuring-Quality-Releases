@@ -127,6 +127,7 @@ stages:
   #             mergeTestResults: true
   #             testRunTitle: 'Postman Tests'
 
+
   - stage: ArchiveAppAndTests
     jobs:
       - job: Archive
@@ -136,10 +137,14 @@ stages:
               rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
               includeRootFolder: false
               archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
-              replaceExistingArchive: true
-          - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
-            artifact: fakerapi
+              archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+              verbose: true
+
+          - task: PublishPipelineArtifact@1
+            displayName: FakerAPI artifact
+            inputs:
+              targetPath: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+              artifact: fakerapi
 
   - stage: AppServiceDeploy
     displayName: WebApp stand-up
@@ -152,17 +157,18 @@ stages:
         runOnce:
           deploy:
             steps:
-
-            - task: AzureRmWebAppDeployment@4
+            - task: AzureWebApp@1
               inputs:
-                ConnectionType: 'AzureRM'
                 azureSubscription: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
                 appType: 'webAppLinux'
-                WebAppName: 'myApplication-danszz-AppService'
+                appName: 'myApplication-danszz-AppService'
                 deployToSlotOrASE: true
-                ResourceGroupName: 'Azuredevops'
-                SlotName: 'production'
-                packageForLinux: '$(Pipeline.Workspace)/fakerapi/$(Build.BuildId)-fakerapi.zip'
+                resourceGroupName: 'Azuredevops'
+                slotName: 'production'
+                package: '$(Pipeline.Workspace)/fakerapi-$(Build.BuildId).zip'
                 
+
+
+
 
 
