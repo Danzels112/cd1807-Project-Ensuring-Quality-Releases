@@ -134,7 +134,7 @@ stages:
           - task: ArchiveFiles@2
             inputs:
               rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-              includeRootFolder: true
+              includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
               replaceExistingArchive: true
@@ -162,6 +162,7 @@ stages:
                 deployToSlotOrASE: true
                 ResourceGroupName: 'Azuredevops'
                 SlotName: 'production'
-                packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerapi.zip'
+                packageForLinux: '$(Pipeline.Workspace)/$(Build.BuildId)-fakerapi.zip'
+                
 
 
