@@ -13,7 +13,7 @@ trigger:
 variables:
   python.version: '3.7.6'
   # ToDo: Replace the service connection name as used in the DevOps project settings
-  azureServiceConnectionId: 'b1387354-0240-4d1a-b331-e8043b91cc6c' # DONE
+  azureServiceConnectionId: 'b1387354-0240-4d1a-b331-e8043b91cc6c' # DONE 
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
@@ -49,20 +49,20 @@ stages:
               backendAzureRmContainerName: 'tfstate'
               backendAzureRmKey: 'test.terraform.tfstate'
               
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Validate code - terraform validate'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'validate'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          - task: TerraformTaskV4@4
+            displayName: 'Validate code - terraform validate'
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Plan output - terraform plan'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'plan'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+          - task: TerraformTaskV4@4
+            displayName: 'Plan output - terraform plan'
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
               
           # - task: TerraformTaskV4@4
           #   displayName: 'Apply configuration - terraform apply'
@@ -70,7 +70,7 @@ stages:
           #     provider: 'azurerm'
           #     command: 'apply'
           #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
+          #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
 
   # - stage: ToolsProvisioning
   #   jobs:
@@ -128,23 +128,23 @@ stages:
   #             testRunTitle: 'Postman Tests'
 
 
-  - stage: ArchiveAppAndTests
-    jobs:
-      - job: Archive
-        steps:
-          - task: ArchiveFiles@2
-            inputs:
-              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-              includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
-              verbose: true
+  # - stage: ArchiveAppAndTests
+  #   jobs:
+  #     - job: Archive
+  #       steps:
+  #         - task: ArchiveFiles@2
+  #           inputs:
+  #             rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+  #             includeRootFolder: false
+  #             archiveType: 'zip'
+  #             archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+  #             verbose: true
 
-          - task: PublishPipelineArtifact@1
-            displayName: FakerAPI artifact
-            inputs:
-              targetPath: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
-              artifact: fakerapi
+  #         - task: PublishPipelineArtifact@1
+  #           displayName: FakerAPI artifact
+  #           inputs:
+  #             targetPath: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+  #             artifact: fakerapi
 
   # - stage: AppServiceDeploy
   #   displayName: WebApp stand-up
@@ -159,7 +159,7 @@ stages:
   #           steps:
   #           - task: AzureWebApp@1
   #             inputs:
-  #               azureSubscription: 'devops-sc'
+  #               azureSubscription: '$(azureServiceConnectionId)'
   #               appType: 'webAppLinux'
   #               appName: 'myApplication-danszzz-AppService'
   #               deployToSlotOrASE: true
@@ -167,24 +167,24 @@ stages:
   #               slotName: 'production'
   #               package: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
                 
-  - stage: WebAppDeployment
-    displayName: Web App Deployment
-    jobs:
-    - deployment: FakeRestAPI
-      pool:
-        vmImage: 'Ubuntu-20.04'
-      environment: 'my-env'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - task: AzureWebApp@1
-              displayName: 'Deploy Azure Web App'
-              inputs:
-                azureSubscription: 'Training-Sub-01 (601c9c7b-8f40-476f-92b1-3b437e0aef1d)'
-                appType: 'webApp'
-                appName: 'myApplication-danszzz-AppService'
-                package: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
-                deploymentMethod: 'auto'
+  # - stage: WebAppDeployment
+  #   displayName: Web App Deployment
+  #   jobs:
+  #   - deployment: FakeRestAPI
+  #     pool:
+  #       vmImage: 'Ubuntu-20.04'
+  #     environment: 'my-env'
+  #     strategy:
+  #       runOnce:
+  #         deploy:
+  #           steps:
+  #           - task: AzureWebApp@1
+  #             displayName: 'Deploy Azure Web App'
+  #             inputs:
+  #               azureSubscription: '$(azureServiceConnectionId)'
+  #               appType: 'webApp'
+  #               appName: 'myApplication-danszzz-AppService'
+  #               package: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
+  #               deploymentMethod: 'auto'
 
 
