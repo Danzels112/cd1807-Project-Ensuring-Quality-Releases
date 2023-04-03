@@ -6,6 +6,9 @@ variable "tenant_id" {}
 
 # Resource Group/Location
 variable "location" {}
+variable "rg_location" {
+  
+}
 variable "resource_group" {}
 variable "application_type" {}
 
