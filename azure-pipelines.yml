@@ -27,7 +27,8 @@ stages:
         - task: CmdLine@2
           inputs:
             script: 'echo Hello world'
-  
+
+# ------------------------------ TERRAFORM ----------------------------------------------------------
   - stage: InfraStandUp
     jobs:
       - job: BuildInfrastructure
@@ -72,6 +73,7 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'eq-march-sc'
 
+# ------------------------------ POSTMAN ----------------------------------------------------------
   # - stage: ToolsProvisioning
   #   jobs:
   #     - job: TestingToolSetup
@@ -126,68 +128,12 @@ stages:
   #             searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/TestPostMan'
   #             mergeTestResults: true
   #             testRunTitle: 'Postman Tests'
+# ------------------------------ WEBAPP ----------------------------------------------------------
 
-
-  # - stage: ArchiveAppAndTests
-  #   jobs:
-  #     - job: Archive
-  #       steps:
-  #         - task: ArchiveFiles@2
-  #           inputs:
-  #             rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-  #             includeRootFolder: false
-  #             archiveType: 'zip'
-  #             archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
-  #             verbose: true
-
-  #         - task: PublishPipelineArtifact@1
-  #           displayName: FakerAPI artifact
-  #           inputs:
-  #             targetPath: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
-  #             artifact: fakerapi
-
-  # - stage: AppServiceDeploy
-  #   displayName: WebApp stand-up
-  #   jobs:
-  #   - deployment: fakerapi
-  #     pool:
-  #       vmImage: 'ubuntu-20.04'
-  #     environment: 'my-env'
-  #     strategy:
-  #       runOnce:
-  #         deploy:
-  #           steps:
-  #           - task: AzureWebApp@1
-  #             inputs:
-  #               azureSubscription: '$(azureServiceConnectionId)'
-  #               appType: 'webAppLinux'
-  #               appName: 'myApplication-danszzz-AppService'
-  #               deployToSlotOrASE: true
-  #               resourceGroupName: 'Azuredevops'
-  #               slotName: 'production'
-  #               package: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
-                
-  # - stage: WebAppDeployment
-  #   displayName: Web App Deployment
-  #   jobs:
-  #   - deployment: FakeRestAPI
-  #     pool:
-  #       vmImage: 'Ubuntu-20.04'
-  #     environment: 'my-env'
-  #     strategy:
-  #       runOnce:
-  #         deploy:
-  #           steps:
-  #           - task: AzureWebApp@1
-  #             displayName: 'Deploy Azure Web App'
-  #             inputs:
-  #               azureSubscription: '$(azureServiceConnectionId)'
-  #               appType: 'webApp'
-  #               appName: 'myApplication-danszzz-AppService'
-  #               package: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
-  #               deploymentMethod: 'auto'
-
-
+  - stage: ArchiveAppAndTests
+    jobs:
+      - job: Archive
+        steps:
           - task: ArchiveFiles@2
             displayName: 'Archive FakeRestAPI'
             inputs:
@@ -198,20 +144,22 @@ stages:
           - publish: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
             displayName: 'Upload fakerrestapi Package'
             artifact: fakerapi
-          # - task: ArchiveFiles@2
-          #   displayName: 'Archive Automation Tests'
-          #   inputs:
-          #     rootFolderOrFile: 'automatedtesting' 
-          #     includeRootFolder: false
-          #     archiveType: 'zip'
-          #     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-automatedtests.zip' 
-          # - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-automatedtests.zip'
-          #   displayName: 'Upload Test Package'
-          #   artifact: drop-automatedtests
+
+          - task: ArchiveFiles@2
+            displayName: 'Archive Selenium'
+            inputs:
+              rootFolderOrFile: 'automatedtesting/selenium'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/selenium.zip'
+          - publish: '$(Build.ArtifactStagingDirectory)/selenium.zip'
+            displayName: 'Upload selenium Package'
+            artifact: selenium
+
   - stage:
     jobs:
-        - deployment: testdeploy
-          displayName: Deploy VM
+        - deployment: WebAppDeploy
+          displayName: WebApp Deployment
           environment:
             name: 'my-env'
             resourceType: VirtualMachine
@@ -233,12 +181,37 @@ stages:
                       packageForLinux: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
                       DeploymentType: 'zipDeploy'
 
-                  - task: Bash@3
-                    inputs:
-                      targetType: 'inline'
-                      script: |
-                        # Write your commands here
-                
-                        echo 'FakeRestAPI Running'
+        - deployment: VMDeploy
+          displayName: Selenium Tests
+          environment:
+            name: 'my-vm'
+            resourceType: VirtualMachine
+            tags: selenium
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                - download: current
+                  artifact: selenium
 
-                  
+                - task: Bash@3
+                inputs:
+                  targetType: 'inline'
+                  script: |           
+                    # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
+                    !#/bin/bash
+                    
+                    sudo apt-get upgrade -y
+                    sudo apt-get install python3-pip unzip chromium-browser -y
+                    pip3 install selenium
+                    wget https://chromedriver.storage.googleapis.com/100.0.4896.20/chromedriver_linux64.zip
+                    unzip chromedriver_linux64.zip
+                    sudo mv chromedriver /usr/bin/chromedriver
+                    sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
+                    export PATH=$PATH:/usr/bin/chromedriver   
+
+                    # NEED TO GET LOG ANALyTIC workspace enabled
+
+                    unzip $(Pipeline.Workspace)/selenium/selenium.zip .
+                    sudo mkdir logs
+                    # TO CONTINUE
