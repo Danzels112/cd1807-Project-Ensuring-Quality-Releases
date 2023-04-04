@@ -174,7 +174,7 @@ stages:
                       ConnectionType: 'AzureRM'
                       azureSubscription: 'eq-march-sc'
                       appType: 'webAppLinux'
-                      WebAppName: 'myApplication-danszzzzz-AppService'
+                      WebAppName: 'myApplication-danszzzzzz-AppService'
                       deployToSlotOrASE: true
                       ResourceGroupName: 'Azuredevops'
                       SlotName: 'production'
