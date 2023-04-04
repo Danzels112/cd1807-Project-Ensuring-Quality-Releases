@@ -190,9 +190,6 @@ stages:
             runOnce:
               deploy:
                 steps:
-                - download: current
-                  artifact: selenium
-
                 - task: Bash@3
                   inputs:
                     targetType: 'inline'
@@ -200,8 +197,9 @@ stages:
                       # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
                       !#/bin/bash
                       
-                      sudo apt-get upgrade -y
-                      sudo apt-get install python3-pip unzip chromium-browser -y
+                      sudo apt update -y
+                      sudo apt upgrade -y
+                      sudo apt install python3-pip unzip chromium-browser -y
                       pip3 install selenium
                       wget https://chromedriver.storage.googleapis.com/100.0.4896.20/chromedriver_linux64.zip
                       unzip chromedriver_linux64.zip
@@ -211,6 +209,15 @@ stages:
 
                       # NEED TO GET LOG ANALyTIC workspace enabled
 
+
+                      # TO CONTINUE
+                - download: current
+                  artifact: selenium
+                - task: Bash@3
+                  displayName: Selenium Tests
+                  inputs:
+                    targetType: inline
+                    script: |
                       unzip $(Pipeline.Workspace)/selenium/selenium.zip .
                       sudo mkdir logs
-                      # TO CONTINUE
+                      python3 login.py > logs/selenium_logs
