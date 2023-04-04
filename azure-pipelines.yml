@@ -195,23 +195,23 @@ stages:
                   artifact: selenium
 
                 - task: Bash@3
-                inputs:
-                  targetType: 'inline'
-                  script: |           
-                    # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
-                    !#/bin/bash
-                    
-                    sudo apt-get upgrade -y
-                    sudo apt-get install python3-pip unzip chromium-browser -y
-                    pip3 install selenium
-                    wget https://chromedriver.storage.googleapis.com/100.0.4896.20/chromedriver_linux64.zip
-                    unzip chromedriver_linux64.zip
-                    sudo mv chromedriver /usr/bin/chromedriver
-                    sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
-                    export PATH=$PATH:/usr/bin/chromedriver   
+                  inputs:
+                    targetType: 'inline'
+                    script: |           
+                      # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
+                      !#/bin/bash
+                      
+                      sudo apt-get upgrade -y
+                      sudo apt-get install python3-pip unzip chromium-browser -y
+                      pip3 install selenium
+                      wget https://chromedriver.storage.googleapis.com/100.0.4896.20/chromedriver_linux64.zip
+                      unzip chromedriver_linux64.zip
+                      sudo mv chromedriver /usr/bin/chromedriver
+                      sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
+                      export PATH=$PATH:/usr/bin/chromedriver   
 
-                    # NEED TO GET LOG ANALyTIC workspace enabled
+                      # NEED TO GET LOG ANALyTIC workspace enabled
 
-                    unzip $(Pipeline.Workspace)/selenium/selenium.zip .
-                    sudo mkdir logs
-                    # TO CONTINUE
+                      unzip $(Pipeline.Workspace)/selenium/selenium.zip .
+                      sudo mkdir logs
+                      # TO CONTINUE
