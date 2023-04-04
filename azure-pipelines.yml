@@ -65,13 +65,13 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'eq-march-sc'
               
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Apply configuration - terraform apply'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'apply'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'eq-march-sc'
+          - task: TerraformTaskV4@4
+            displayName: 'Apply configuration - terraform apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: 'eq-march-sc'
 
 # ------------------------------ POSTMAN ----------------------------------------------------------
   # - stage: ToolsProvisioning
@@ -137,7 +137,7 @@ stages:
           - task: ArchiveFiles@2
             displayName: 'Archive FakeRestAPI'
             inputs:
-              rootFolderOrFile: 'automatedtesting/jmeter/fakerestapi'
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/fakerestapi'
               includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
@@ -145,16 +145,16 @@ stages:
             displayName: 'Upload fakerrestapi Package'
             artifact: fakerapi
 
-          # - task: ArchiveFiles@2
-          #   displayName: 'Archive Selenium'
-          #   inputs:
-          #     rootFolderOrFile: 'automatedtesting/selenium'
-          #     includeRootFolder: false
-          #     archiveType: 'zip'
-          #     archiveFile: '$(Build.ArtifactStagingDirectory)/selenium.zip'
-          # - publish: '$(Build.ArtifactStagingDirectory)/selenium.zip'
-          #   displayName: 'Upload selenium Package'
-          #   artifact: selenium
+          - task: ArchiveFiles@2
+            displayName: 'Archive Selenium'
+            inputs:
+              rootFolderOrFile: 'automatedtesting/selenium'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/selenium.zip'
+          - publish: '$(Build.ArtifactStagingDirectory)/selenium.zip'
+            displayName: 'Upload selenium Package'
+            artifact: selenium
 
   - stage:
     jobs:
