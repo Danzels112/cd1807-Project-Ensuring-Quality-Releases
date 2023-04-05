@@ -13,7 +13,7 @@ resource "azurerm_network_interface" "linux_box_nic" {
 
 data "azurerm_image" "packer_custom"{
     resource_group_name = "Azuredevops"
-    name                = "lin-img-test-image-20230320172548"
+    name                = "my-lin-img"
 }
 
 resource "azurerm_linux_virtual_machine" "linux_box" {
