@@ -13,14 +13,14 @@ resource "azurerm_network_interface" "linux_box_nic" {
 
 data "azurerm_image" "packer_custom"{
     resource_group_name = "Azuredevops"
-    name                = "myvm-image-20230405170445"
+    name                = "myvm-image-20230405172258"
 }
 
 resource "azurerm_linux_virtual_machine" "linux_box" {
   name                = "${var.vm_name}"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
-  size                = "Standard_D2_v2"
+  size                = "Standard_DS2_v2"
   disable_password_authentication = false
   admin_username      = "danzels112"
   admin_password = "admin@123!111"
