@@ -221,4 +221,6 @@ stages:
                     script: |
                       unzip $(Pipeline.Workspace)/selenium/selenium.zip
                       sudo mkdir logs
+                      sudo touch logs/selenium_logs
+                      chmod 777 logs/selenium_logs
                       python3 login.py > logs/selenium_logs
