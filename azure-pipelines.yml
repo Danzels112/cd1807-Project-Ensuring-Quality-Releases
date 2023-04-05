@@ -17,7 +17,7 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
-  environmentName: 'my-env'
+  environmentName: 'myvm'
 
 stages:
   - stage: PipelineTest
@@ -130,92 +130,92 @@ stages:
   #             testRunTitle: 'Postman Tests'
 # ------------------------------ WEBAPP ----------------------------------------------------------
 
-  # - stage: ArchiveAppAndTests
-  #   jobs:
-  #     - job: Archive
-  #       steps:
-  #         - task: ArchiveFiles@2
-  #           displayName: 'Archive FakeRestAPI'
-  #           inputs:
-  #             rootFolderOrFile: '$(System.DefaultWorkingDirectory)/fakerestapi'
-  #             includeRootFolder: false
-  #             archiveType: 'zip'
-  #             archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
-  #         - publish: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
-  #           displayName: 'Upload fakerrestapi Package'
-  #           artifact: fakerapi
+  - stage: ArchiveAppAndTests
+    jobs:
+      - job: Archive
+        steps:
+          - task: ArchiveFiles@2
+            displayName: 'Archive FakeRestAPI'
+            inputs:
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/fakerestapi'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+          - publish: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+            displayName: 'Upload fakerrestapi Package'
+            artifact: fakerapi
 
-  #         - task: ArchiveFiles@2
-  #           displayName: 'Archive Selenium'
-  #           inputs:
-  #             rootFolderOrFile: 'automatedtesting/selenium'
-  #             includeRootFolder: false
-  #             archiveType: 'zip'
-  #             archiveFile: '$(Build.ArtifactStagingDirectory)/selenium.zip'
-  #         - publish: '$(Build.ArtifactStagingDirectory)/selenium.zip'
-  #           displayName: 'Upload selenium Package'
-  #           artifact: selenium
+          - task: ArchiveFiles@2
+            displayName: 'Archive Selenium'
+            inputs:
+              rootFolderOrFile: 'automatedtesting/selenium'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/selenium.zip'
+          - publish: '$(Build.ArtifactStagingDirectory)/selenium.zip'
+            displayName: 'Upload selenium Package'
+            artifact: selenium
 
-  # - stage:
-  #   jobs:
-        # - deployment: WebAppDeploy
-        #   displayName: WebApp Deployment
-        #   environment:
-        #     name: 'my-env'
-        #     resourceType: VirtualMachine
-        #   pool:
-        #     vmImage: 'Ubuntu-latest'
-        #   strategy:
-        #     runOnce:
-        #       deploy:
-        #          steps:
-        #           - task: AzureRmWebAppDeployment@4
-        #             inputs:
-        #               ConnectionType: 'AzureRM'
-        #               azureSubscription: 'eq-march-sc'
-        #               appType: 'webAppLinux'
-        #               WebAppName: 'myApplication-danszzzzz-AppService'
-        #               deployToSlotOrASE: true
-        #               ResourceGroupName: 'Azuredevops'
-        #               SlotName: 'production'
-        #               packageForLinux: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
-        #               DeploymentType: 'zipDeploy'
+  - stage:
+    jobs:
+        - deployment: WebAppDeploy
+          displayName: WebApp Deployment
+          environment:
+            name: 'my-env'
+            resourceType: VirtualMachine
+          pool:
+            vmImage: 'Ubuntu-latest'
+          strategy:
+            runOnce:
+              deploy:
+                 steps:
+                  - task: AzureRmWebAppDeployment@4
+                    inputs:
+                      ConnectionType: 'AzureRM'
+                      azureSubscription: 'eq-march-sc'
+                      appType: 'webAppLinux'
+                      WebAppName: 'myApplication-danszzzzz-AppService'
+                      deployToSlotOrASE: true
+                      ResourceGroupName: 'Azuredevops'
+                      SlotName: 'production'
+                      packageForLinux: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
+                      DeploymentType: 'zipDeploy'
 
-        # - deployment: VMDeploy
-        #   displayName: Selenium Tests
-        #   environment:
-        #     name: 'my-env'
-        #     resourceType: VirtualMachine
-        #   strategy:
-        #     runOnce:
-        #       deploy:
-        #         steps:
-        #         - download: current
-        #           artifact: selenium
-        #         - task: Bash@3
-        #           inputs:
-        #             targetType: 'inline'
-        #             script: |           
-        #               # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
-        #               !#/bin/bash
+        - deployment: VMDeploy
+          displayName: Selenium Tests
+          environment:
+            name: 'myvm'
+            resourceType: VirtualMachine
+          strategy:
+            runOnce:
+              deploy:
+                steps:
+                - download: current
+                  artifact: selenium
+                - task: Bash@3
+                  inputs:
+                    targetType: 'inline'
+                    script: |           
+                      # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
+                      !#/bin/bash
                       
-        #               sudo apt update -y
-        #               sudo apt upgrade -y
-        #               sudo apt install python3-pip unzip chromium-browser -y
-        #               pip3 install selenium -y
-        #               sudo pip3 uninstall urllib3 -y
-        #               sudo pip3 install --upgrade requests -y
-        #               wget https://chromedriver.storage.googleapis.com/111.0.5563.64/chromedriver_linux64.zip
-        #               unzip chromedriver_linux64.zip
-        #               sudo mv chromedriver /usr/bin/chromedriver
-        #               sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
-        #               export PATH=$PATH:/usr/bin/chromedriver
-        #               #wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w be98cbd1-0390-4abd-990a-50aef3d117fa -s BRx+GeUB4WN0BpbwQ32z3n47It30Z0UyeZChLa8OBnUFWuIufXBoonxF2YhEXZ8NqgtGfh6YrCKhsu1+uis0MA== -d opinsights.azure.com
+                      sudo apt update -y
+                      sudo apt upgrade -y
+                      sudo apt install python3-pip unzip chromium-browser -y
+                      pip3 install selenium -y
+                      sudo pip3 uninstall urllib3 -y
+                      sudo pip3 install --upgrade requests -y
+                      wget https://chromedriver.storage.googleapis.com/111.0.5563.64/chromedriver_linux64.zip
+                      unzip chromedriver_linux64.zip
+                      sudo mv chromedriver /usr/bin/chromedriver
+                      sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
+                      export PATH=$PATH:/usr/bin/chromedriver
+                      #wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w be98cbd1-0390-4abd-990a-50aef3d117fa -s BRx+GeUB4WN0BpbwQ32z3n47It30Z0UyeZChLa8OBnUFWuIufXBoonxF2YhEXZ8NqgtGfh6YrCKhsu1+uis0MA== -d opinsights.azure.com
 
-        #               # NEED TO GET LOG ANALyTIC workspace enabled
-        #               cd $(Pipeline.Workspace)/selenium/
-        #               unzip selenium.zip
-        #               sudo mkdir logs
-        #               sudo chmod +x login.py
-        #               sudo python3 login.py > selenium_logs
-        #               sudo mv selenium_logs logs/selenium_logs
+                      # NEED TO GET LOG ANALyTIC workspace enabled
+                      cd $(Pipeline.Workspace)/selenium/
+                      unzip selenium.zip
+                      sudo mkdir logs
+                      sudo chmod +x login.py
+                      sudo python3 login.py > selenium_logs
+                      sudo mv selenium_logs logs/selenium_logs
