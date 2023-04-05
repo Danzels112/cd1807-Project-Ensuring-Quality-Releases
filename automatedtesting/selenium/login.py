@@ -6,16 +6,19 @@ import time
 
 def driver_all():
     print ('Starting the browser...')
-    driver = webdriver.Chrome()
+    chrome_options = ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--remote-debugging-port=9515")
+    driver = webdriver.Chrome(chrome_options=chrome_options, executable_path='/home/danzels112/chromedriver')
     return driver
 
 # Start the browser and login with standard_user
 def login (driver, user, password):
     url = 'https://www.saucedemo.com/'
-    # --uncomment when running in Azure DevOps.
-    # options = ChromeOptions()
-    # options.add_argument("--headless") 
-    # driver = webdriver.Chrome(options=options)
     print ('Browser started successfully. Navigating to the demo page to login.')
     driver.get(url)
     username = driver.find_element(By.ID, 'user-name')
@@ -53,8 +56,8 @@ def add_items(driver):
     time.sleep(10)
 
 def del_items(driver):
-    shopping_cart = driver_to_use.find_element(By.CLASS_NAME,'shopping_cart_link').click()
-    cart_container = driver_to_use.find_elements(By.CLASS_NAME, 'cart_item')
+    shopping_cart = driver.find_element(By.CLASS_NAME,'shopping_cart_link').click()
+    cart_container = driver.find_elements(By.CLASS_NAME, 'cart_item')
     for cart_item in cart_container:
         cart_item_name = cart_item.find_element(By.CLASS_NAME, 'inventory_item_name').text
         cart_label = cart_item.find_element(By.CLASS_NAME,'cart_item_label')

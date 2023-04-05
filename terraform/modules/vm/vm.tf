@@ -20,7 +20,7 @@ resource "azurerm_linux_virtual_machine" "linux_box" {
   name                = "${var.vm_name}"
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
-  size                = "Standard_DS2_v2"
+  size                = "Standard_D1_v2"
   disable_password_authentication = false
   admin_username      = "danzels112"
   admin_password = "admin@123!"
