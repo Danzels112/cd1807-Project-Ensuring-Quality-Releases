@@ -57,21 +57,21 @@ stages:
               command: 'validate'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-          - task: TerraformTaskV4@4
-            displayName: 'Plan output - terraform plan'
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-              environmentServiceNameAzureRM: 'eq-march-sc'
+          # - task: TerraformTaskV4@4
+          #   displayName: 'Plan output - terraform plan'
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'plan'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          #     environmentServiceNameAzureRM: 'eq-march-sc'
               
-          - task: TerraformTaskV4@4
-            displayName: 'Apply configuration - terraform apply'
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-              environmentServiceNameAzureRM: 'eq-march-sc'
+          # - task: TerraformTaskV4@4
+          #   displayName: 'Apply configuration - terraform apply'
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'apply'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          #     environmentServiceNameAzureRM: 'eq-march-sc'
 
 # ------------------------------ POSTMAN ----------------------------------------------------------
   # - stage: ToolsProvisioning
@@ -219,6 +219,6 @@ stages:
                   inputs:
                     targetType: inline
                     script: |
-                      unzip $(Pipeline.Workspace)/selenium/selenium.zip .
+                      unzip $(Pipeline.Workspace)/selenium/selenium.zip
                       sudo mkdir logs
                       python3 login.py > logs/selenium_logs
