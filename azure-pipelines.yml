@@ -57,21 +57,21 @@ stages:
               command: 'validate'
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Plan output - terraform plan'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'plan'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'eq-march-sc'
+          - task: TerraformTaskV4@4
+            displayName: 'Plan output - terraform plan'
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: 'eq-march-sc'
               
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Apply configuration - terraform apply'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'apply'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'eq-march-sc'
+          - task: TerraformTaskV4@4
+            displayName: 'Apply configuration - terraform apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: 'eq-march-sc'
 
 # ------------------------------ POSTMAN ----------------------------------------------------------
   # - stage: ToolsProvisioning
