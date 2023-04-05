@@ -65,13 +65,13 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'eq-march-sc'
               
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Apply configuration - terraform apply'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'apply'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'eq-march-sc'
+          - task: TerraformTaskV4@4
+            displayName: 'Apply configuration - terraform apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: 'eq-march-sc'
 
 # ------------------------------ POSTMAN ----------------------------------------------------------
   # - stage: ToolsProvisioning
@@ -130,20 +130,20 @@ stages:
   #             testRunTitle: 'Postman Tests'
 # ------------------------------ WEBAPP ----------------------------------------------------------
 
-  - stage: ArchiveAppAndTests
-    jobs:
-      - job: Archive
-        steps:
-          - task: ArchiveFiles@2
-            displayName: 'Archive FakeRestAPI'
-            inputs:
-              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/fakerestapi'
-              includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
-          - publish: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
-            displayName: 'Upload fakerrestapi Package'
-            artifact: fakerapi
+  # - stage: ArchiveAppAndTests
+  #   jobs:
+  #     - job: Archive
+  #       steps:
+  #         - task: ArchiveFiles@2
+  #           displayName: 'Archive FakeRestAPI'
+  #           inputs:
+  #             rootFolderOrFile: '$(System.DefaultWorkingDirectory)/fakerestapi'
+  #             includeRootFolder: false
+  #             archiveType: 'zip'
+  #             archiveFile: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+  #         - publish: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
+  #           displayName: 'Upload fakerrestapi Package'
+  #           artifact: fakerapi
 
           - task: ArchiveFiles@2
             displayName: 'Archive Selenium'
@@ -158,28 +158,28 @@ stages:
 
   - stage:
     jobs:
-        - deployment: WebAppDeploy
-          displayName: WebApp Deployment
-          environment:
-            name: 'my-env'
-            resourceType: VirtualMachine
-          pool:
-            vmImage: 'Ubuntu-latest'
-          strategy:
-            runOnce:
-              deploy:
-                 steps:
-                  - task: AzureRmWebAppDeployment@4
-                    inputs:
-                      ConnectionType: 'AzureRM'
-                      azureSubscription: 'eq-march-sc'
-                      appType: 'webAppLinux'
-                      WebAppName: 'myApplication-danszzzzz-AppService'
-                      deployToSlotOrASE: true
-                      ResourceGroupName: 'Azuredevops'
-                      SlotName: 'production'
-                      packageForLinux: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
-                      DeploymentType: 'zipDeploy'
+        # - deployment: WebAppDeploy
+        #   displayName: WebApp Deployment
+        #   environment:
+        #     name: 'my-env'
+        #     resourceType: VirtualMachine
+        #   pool:
+        #     vmImage: 'Ubuntu-latest'
+        #   strategy:
+        #     runOnce:
+        #       deploy:
+        #          steps:
+        #           - task: AzureRmWebAppDeployment@4
+        #             inputs:
+        #               ConnectionType: 'AzureRM'
+        #               azureSubscription: 'eq-march-sc'
+        #               appType: 'webAppLinux'
+        #               WebAppName: 'myApplication-danszzzzz-AppService'
+        #               deployToSlotOrASE: true
+        #               ResourceGroupName: 'Azuredevops'
+        #               SlotName: 'production'
+        #               packageForLinux: '$(Pipeline.Workspace)/fakerapi/fakerapi-$(Build.BuildId).zip'
+        #               DeploymentType: 'zipDeploy'
 
         - deployment: VMDeploy
           displayName: Selenium Tests
@@ -205,7 +205,8 @@ stages:
                       unzip chromedriver_linux64.zip
                       sudo mv chromedriver /usr/bin/chromedriver
                       sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
-                      export PATH=$PATH:/usr/bin/chromedriver   
+                      export PATH=$PATH:/usr/bin/chromedriver
+                      wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w be98cbd1-0390-4abd-990a-50aef3d117fa -s BRx+GeUB4WN0BpbwQ32z3n47It30Z0UyeZChLa8OBnUFWuIufXBoonxF2YhEXZ8NqgtGfh6YrCKhsu1+uis0MA== -d opinsights.azure.com
 
                       # NEED TO GET LOG ANALyTIC workspace enabled
 
