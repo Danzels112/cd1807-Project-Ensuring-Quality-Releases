@@ -206,7 +206,7 @@ stages:
                       sudo mv chromedriver /usr/bin/chromedriver
                       sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
                       export PATH=$PATH:/usr/bin/chromedriver
-                      wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w be98cbd1-0390-4abd-990a-50aef3d117fa -s BRx+GeUB4WN0BpbwQ32z3n47It30Z0UyeZChLa8OBnUFWuIufXBoonxF2YhEXZ8NqgtGfh6YrCKhsu1+uis0MA== -d opinsights.azure.com
+                      #wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w be98cbd1-0390-4abd-990a-50aef3d117fa -s BRx+GeUB4WN0BpbwQ32z3n47It30Z0UyeZChLa8OBnUFWuIufXBoonxF2YhEXZ8NqgtGfh6YrCKhsu1+uis0MA== -d opinsights.azure.com
 
                       # NEED TO GET LOG ANALyTIC workspace enabled
 
@@ -219,8 +219,9 @@ stages:
                   inputs:
                     targetType: inline
                     script: |
-                      unzip $(Pipeline.Workspace)/selenium/selenium.zip
+                      cd $(Pipeline.Workspace)/selenium/
+                      unzip selenium.zip
                       sudo mkdir logs
-                      sudo touch logs/selenium_logs
-                      chmod 777 logs/selenium_logs
-                      python3 login.py > logs/selenium_logs
+                      chmod +x login.py
+                      python3 login.py > selenium_logs
+                      mv selenium_logs logs/selenium_logs
