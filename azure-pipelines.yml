@@ -204,7 +204,7 @@ stages:
                       sudo apt upgrade -y
                       sudo apt install python3-pip unzip chromium-browser -y
                       pip3 install selenium
-                      sudo pip3 uninstall urllib3
+                      sudo pip3 -y uninstall urllib3
                       sudo pip3 install --upgrade requests
                       wget https://chromedriver.storage.googleapis.com/111.0.5563.64/chromedriver_linux64.zip
                       unzip chromedriver_linux64.zip
