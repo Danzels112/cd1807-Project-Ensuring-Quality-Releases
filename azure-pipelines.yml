@@ -156,8 +156,8 @@ stages:
             displayName: 'Upload selenium Package'
             artifact: selenium
 
-  # - stage:
-  #   jobs:
+  - stage:
+    jobs:
   #       - deployment: WebAppDeploy
   #         displayName: WebApp Deployment
   #         environment:
