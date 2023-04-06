@@ -65,9 +65,6 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'eq-march-sc'
               
-      - job: ApplyConfiguration
-        steps:
-
           - task: TerraformTaskV4@4
             displayName: 'Apply configuration - terraform apply'
             inputs:
