@@ -3,9 +3,15 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 import time
+import datetime
+
+def timestamp():
+    now = datetime.datetime.now()
+    formatted_time = now.strftime("%y%m%d %H:%M:%S")
+    return formatted_time
 
 def driver_all():
-    print ('Starting the browser...')
+    print(f'{timestamp()}: Starting the browser...')
     chrome_options = ChromeOptions()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -19,22 +25,22 @@ def driver_all():
 # Start the browser and login with standard_user
 def login (driver, user, password):
     url = 'https://www.saucedemo.com/'
-    print ('Browser started successfully. Navigating to the demo page to login.')
+    print (f'{timestamp()}: Browser started successfully. Navigating to the demo page to login.')
     driver.get(url)
     username = driver.find_element(By.ID, 'user-name')
-    print(f"Entering username {user}")
+    print(f'{timestamp()}: Entering username {user}')
     username.send_keys(user)
     user_pw = driver.find_element(By.ID, 'password')
-    print("Entering password")
+    print(f'{timestamp()}: Entering password')
     user_pw.send_keys(password)
 
     login_button = driver.find_element(By.ID, 'login-button')
-    print("Submitting credentials to login")
+    print(f'{timestamp()}: Submitting credentials to login')
     login_button.click()
     product_header = driver.find_element(By.CLASS_NAME, 'title')
 
     assert product_header.text == "Products", "ERROR: LOGIN FAILED"
-    print("Login was successful")
+    print(f'{timestamp()}: Login was successful')
     time.sleep(10)
 
 def add_items(driver):
@@ -47,12 +53,12 @@ def add_items(driver):
         item_pricebar = item_description.find_element(By.CLASS_NAME, 'pricebar')
         item_button = item_pricebar.find_element(By.TAG_NAME,'button')
         item_button.click()
-        print(f"Item {item_name} was added to shopping cart!")
+        print(f'{timestamp()}: Item {item_name} was added to shopping cart!')
         
 
     items_in_cart = driver.find_element(By.CLASS_NAME, 'shopping_cart_badge').text
     assert int(items_in_cart) == len(items), "ERROR: ALL ITEMS NOT ADDED"
-    print(f"Items expected {len(items)}, items in cart {items_in_cart}")
+    print(f'{timestamp()}: Items expected {len(items)}, items in cart {items_in_cart}')
     time.sleep(10)
 
 def del_items(driver):
@@ -64,7 +70,7 @@ def del_items(driver):
         cart_item_pricebar = cart_label.find_element(By.CLASS_NAME, 'item_pricebar')
         cart_item_button = cart_item_pricebar.find_element(By.TAG_NAME, 'button')
         cart_item_button.click()
-        print(f"Item {cart_item_name} was removed from cart!")
+        print(f'{timestamp()}: Item {cart_item_name} was removed from cart!')
         time.sleep(3)
 
 
