@@ -201,14 +201,14 @@ stages:
                       # ToDo: Install Selenium, Chromium-browser & Chromedriver, if not already in the custom VM image. 
                       !#/bin/bash
                       
-                      sudo apt update -y
-                      sudo apt upgrade -y
-                      sudo apt install python3-pip unzip chromium-browser -y
-                      pip3 install selenium
-                      pip3 uninstall -y urllib3
-                      pip install --upgrade requests
-                      wget https://chromedriver.storage.googleapis.com/111.0.5563.64/chromedriver_linux64.zip
-                      unzip chromedriver_linux64.zip
+                      # sudo apt update -y
+                      # sudo apt upgrade -y
+                      # sudo apt install python3-pip unzip chromium-browser -y
+                      # pip3 install selenium
+                      # pip3 uninstall -y urllib3
+                      pip3 install --upgrade requests
+                      # wget https://chromedriver.storage.googleapis.com/111.0.5563.64/chromedriver_linux64.zip
+                      # unzip chromedriver_linux64.zip
                       sudo mv chromedriver /usr/bin/chromedriver
                       sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
                       export PATH=$PATH:/usr/bin/chromedriver
