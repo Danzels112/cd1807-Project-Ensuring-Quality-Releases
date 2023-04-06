@@ -208,9 +208,10 @@ stages:
                       pip3 install --upgrade requests
                       wget https://chromedriver.storage.googleapis.com/111.0.5563.64/chromedriver_linux64.zip
                       unzip chromedriver_linux64.zip
-                      sudo mv chromedriver /usr/bin/chromedriver
-                      sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
-                      export PATH=$PATH:/usr/bin/chromedriver
+                      mv chromedriver /home/danzels112/chromedriver
+                      # sudo chown root:root /usr/bin/chromedriver && sudo chmod +x /usr/bin/chromedriver
+                      chmod +x /home/danzels112/chromedriver
+                      export PATH=$PATH:/home/danzels112/chromedriver
                       wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w be98cbd1-0390-4abd-990a-50aef3d117fa -s BRx+GeUB4WN0BpbwQ32z3n47It30Z0UyeZChLa8OBnUFWuIufXBoonxF2YhEXZ8NqgtGfh6YrCKhsu1+uis0MA== -d opinsights.azure.com
 
                       # NEED TO GET LOG ANALyTIC workspace enabled
