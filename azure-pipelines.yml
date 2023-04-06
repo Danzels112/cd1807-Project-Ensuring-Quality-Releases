@@ -65,13 +65,13 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'eq-march-sc'
               
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Apply configuration - terraform apply'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'apply'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'eq-march-sc'
+          - task: TerraformTaskV4@4
+            displayName: 'Apply configuration - terraform apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: 'eq-march-sc'
 
 # ------------------------------ POSTMAN ----------------------------------------------------------
   # - stage: ToolsProvisioning
@@ -203,9 +203,9 @@ stages:
                       sudo apt update -y
                       sudo apt upgrade -y
                       sudo apt install python3-pip unzip chromium-browser -y
-                      pip3 install selenium -y
-                      sudo pip3 uninstall urllib3 -y
-                      sudo pip3 install --upgrade requests -y
+                      pip3 install selenium
+                      sudo pip3 uninstall urllib3
+                      sudo pip3 install --upgrade requests
                       wget https://chromedriver.storage.googleapis.com/111.0.5563.64/chromedriver_linux64.zip
                       unzip chromedriver_linux64.zip
                       sudo mv chromedriver /usr/bin/chromedriver
@@ -220,3 +220,5 @@ stages:
                       sudo chmod +x login.py
                       sudo python3 login.py > selenium_logs
                       sudo mv selenium_logs logs/selenium_logs
+                      sudo mv logs/selenium_logs logs/log-sel.txt
+                      sudo mv logs/log-sel.txt /var/log/log-sel.txt
