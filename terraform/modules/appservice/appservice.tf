@@ -14,6 +14,6 @@ resource "azurerm_linux_web_app" "test" {
 
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE" = 1
-  }
 
+}
 }
