@@ -14,6 +14,7 @@ resource "azurerm_linux_web_app" "test" {
 
   site_config {
     remote_debugging_enabled = true
+    always_on = false
   }
 
   app_settings = {
