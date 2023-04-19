@@ -13,14 +13,13 @@ resource "azurerm_windows_web_app" "test" {
   resource_group_name = "${var.resource_group}"
   service_plan_id     = azurerm_service_plan.test.id
 
-  application_stack {
-    current_stack = "dotnet"
-    dotnet_version = "v6.0"
-  }
 
   site_config {
     remote_debugging_enabled = true
     always_on = false
+    application_stack {
+      dotnet_version = "v6.0"
+    }
   }
 
   app_settings = {
