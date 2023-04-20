@@ -74,60 +74,60 @@ stages:
               environmentServiceNameAzureRM: 'eq-march-sc'
 
 # ------------------------------ POSTMAN ----------------------------------------------------------
-  - stage: ToolsAndPostman
-    jobs:
-      - job: ToolsAndPostmanSetup
-        steps:
-          - task: CmdLine@2
-            displayName: 'Install node'
-            inputs:
-              script: 'sudo apt install nodejs'
+  # - stage: ToolsAndPostman
+  #   jobs:
+  #     - job: ToolsAndPostmanSetup
+  #       steps:
+  #         - task: CmdLine@2
+  #           displayName: 'Install node'
+  #           inputs:
+  #             script: 'sudo apt install nodejs'
               
-          - task: CmdLine@2
-            displayName: 'Ensure node is installed'
-            inputs:
-              script: 'nodejs --version'
+  #         - task: CmdLine@2
+  #           displayName: 'Ensure node is installed'
+  #           inputs:
+  #             script: 'nodejs --version'
 
-          - task: CmdLine@2
-            displayName: 'Install newman'
-            inputs:
-              script: 'npm install -g newman'
-              workingDirectory: '$(System.DefaultWorkingDirectory)'
+  #         - task: CmdLine@2
+  #           displayName: 'Install newman'
+  #           inputs:
+  #             script: 'npm install -g newman'
+  #             workingDirectory: '$(System.DefaultWorkingDirectory)'
               
               
-          - task: CmdLine@2
-            displayName: 'Ensure newman is installed'
-            inputs:
-              script: 'newman -v'
+  #         - task: CmdLine@2
+  #           displayName: 'Ensure newman is installed'
+  #           inputs:
+  #             script: 'newman -v'
 
-          - task: CmdLine@2
-            displayName: 'Run Regression tests'
-            continueOnError: true
-            inputs:
-              script: 'newman run regression_Postman.postman_collection.json -e Regression_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan/PostmanRegression.xml'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+  #         - task: CmdLine@2
+  #           displayName: 'Run Regression tests'
+  #           continueOnError: true
+  #           inputs:
+  #             script: 'newman run regression_Postman.postman_collection.json -e Regression_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan/PostmanRegression.xml'
+  #             workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
               
-          - task: CmdLine@2
-            displayName: 'Run Data validation tests'
-            continueOnError: true
-            inputs:
-              script: 'newman run Data_Validation.postman_collection.json -e Validation_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan/PostmanRegression.xml'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+  #         - task: CmdLine@2
+  #           displayName: 'Run Data validation tests'
+  #           continueOnError: true
+  #           inputs:
+  #             script: 'newman run Data_Validation.postman_collection.json -e Validation_env.postman_environment.json --delay-request 60000 --reporters cli,junit --reporter-junit-export TestPostMan/PostmanRegression.xml'
+  #             workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
 
-          - task: CmdLine@2
-            displayName: 'ls -la'
-            continueOnError: true
-            inputs:
-              script: 'ls -la'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+  #         - task: CmdLine@2
+  #           displayName: 'ls -la'
+  #           continueOnError: true
+  #           inputs:
+  #             script: 'ls -la'
+  #             workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
 
-          - task: PublishTestResults@2
-            inputs:
-              testResultsFormat: 'JUnit'
-              testResultsFiles: '*.xml'
-              searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/TestPostMan'
-              mergeTestResults: true
-              testRunTitle: 'Postman Tests'
+  #         - task: PublishTestResults@2
+  #           inputs:
+  #             testResultsFormat: 'JUnit'
+  #             testResultsFiles: '*.xml'
+  #             searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman/TestPostMan'
+  #             mergeTestResults: true
+  #             testRunTitle: 'Postman Tests'
 # ------------------------------ WEBAPP ----------------------------------------------------------
 
   - stage: ArchiveAppAndTests
@@ -144,6 +144,17 @@ stages:
           - publish: '$(Build.ArtifactStagingDirectory)/fakerapi-$(Build.BuildId).zip'
             displayName: 'Upload fakerrestapi Package'
             artifact: fakerapi
+
+          - task: ArchiveFiles@2
+            displayName: 'Archive Selenium'
+            inputs:
+              rootFolderOrFile: 'automatedtesting/selenium'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/selenium.zip'
+          - publish: '$(Build.ArtifactStagingDirectory)/selenium.zip'
+            displayName: 'Upload selenium Package'
+            artifact: selenium
 
   - stage:
     jobs:
