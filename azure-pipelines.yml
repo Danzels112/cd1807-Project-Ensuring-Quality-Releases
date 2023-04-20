@@ -20,18 +20,11 @@ variables:
   environmentName: 'myvm'
 
 stages:
-  - stage: PipelineTest
-    jobs:
-      - job: Randomtest
-        steps:
-        - task: CmdLine@2
-          inputs:
-            script: 'echo Hello world'
 
 # ------------------------------ TERRAFORM ----------------------------------------------------------
   - stage: InfraStandUp
     jobs:
-      - job: InitializeAndPlan
+      - job: InitializeAndPlanAndApply
         steps:
           - task: TerraformInstaller@1
             displayName: 'Install Terraform'
@@ -65,18 +58,18 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
               environmentServiceNameAzureRM: 'eq-march-sc'
               
-          # - task: TerraformTaskV4@4
-          #   displayName: 'Apply configuration - terraform apply'
-          #   inputs:
-          #     provider: 'azurerm'
-          #     command: 'apply'
-          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-          #     environmentServiceNameAzureRM: 'eq-march-sc'
+          - task: TerraformTaskV4@4
+            displayName: 'Apply configuration - terraform apply'
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+              environmentServiceNameAzureRM: 'eq-march-sc'
 
 # ------------------------------ POSTMAN ----------------------------------------------------------
-  - stage: ToolsAndPostman
+  - stage: Postman
     jobs:
-      - job: ToolsAndPostmanSetup
+      - job: postmanAndDepenencySetup
         steps:
           - task: CmdLine@2
             displayName: 'Install node'
