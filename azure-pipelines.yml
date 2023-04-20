@@ -220,5 +220,24 @@ stages:
     jobs:
       - job: JMeterTesting
         steps:
+        - task: JMeterInstaller@0
+          inputs:
+            jmeterVersion: '5.4.2'
 
+        - task: Bash@3
+          displayName: StressTest
+          inputs:
+            targetType: 'inline'
+            script: 'jmeter -n -t automatedtesting/jmeter/Stress_Test.jmx -Jresdir=automatedtesting/jmeter/book_id.csv -l automatedtesting/jmeter/StressOutput.jtl -e -o automatedtesting/jmeter/stressrep'
         
+        - task: Bash@3
+          displayName: EnduranceTest
+          inputs:
+            targetType: 'inline'
+            script: 'jmeter -n -t automatedtesting/jmeter/Endurance_Test.jmx -Jresdir=automatedtesting/jmeter/book_id.csv -l automatedtesting/jmeter/EnduranceOutput.jtl -e -o automatedtesting/jmeter/endurancerep'
+        
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: 'automatedtesting/jmeter'
+            ArtifactName: 'jmeterresults'
+            publishLocation: 'Container'
